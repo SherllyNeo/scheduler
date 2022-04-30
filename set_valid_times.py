@@ -1,6 +1,7 @@
 path = "./log_files/valid_times"
 
 
+#toy function to add the dictionary of allowed times - sort of acts like settings
 
 
 def set_valid_timer():
