@@ -5,6 +5,7 @@ from icecream import ic
 
 ic.enable()
 
+GLOBAL_LOGS = log_files()
 
 def start_thread():
     log_control = log_files()
@@ -19,11 +20,12 @@ def start_thread():
         log_control.dirty_to_clean()
 
 while True:
+    GLOBAL_LOGS.check_exist()
     time.sleep(1)
-    print("checking")
+    ic("checking")
 
     if valid_time():
-        print("starting checker")
+        ic("starting checker")
         start_thread()
     else:
         ic("invalid time: appending no-task to datetime")

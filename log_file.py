@@ -68,7 +68,11 @@ class log_files:
 
     def set_inactive(self):
         """ used when the time is invalid - sets the inactive activity """
-        last_activity = self.dirty_logs.tail(1)['activity'].values[0]
+        last_activity = str()
+        try:
+            last_activity = self.dirty_logs.tail(1)['activity'].values[0]
+        except:
+            last_activity = ""
         if last_activity == "inactive":
             return
         else:
