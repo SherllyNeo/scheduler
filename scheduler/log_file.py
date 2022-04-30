@@ -1,0 +1,139 @@
+import pandas as pd
+import os.path
+from icecream import ic
+from datetime import datetime, timedelta
+import math
+import numpy as np
+import clean
+import estimate_class
+ic.enable()
+
+
+
+class log_files:
+
+    def __init__(self):
+        self.path_to_dirty_logs =  "log_files/log_files/logs.csv"
+        self.path_to_clean_logs =  "log_files/log_files_cleaned/clean_logs.csv"
+        self.dirty_logs = pd.DataFrame({'activity':[],'datetime':[]})
+        self.clean_logs = pd.DataFrame({'activity':[],'BeginDatetime':[],'EndDatetime':[]})
+        self.est = dict()
+        self.def_time = 1
+
+    def refresh_logs(self):
+        date_parser = lambda date: pd.to_datetime(date)
+        self.dirty_logs = pd.read_csv(self.path_to_dirty_logs,parse_dates=[0],date_parser=date_parser).dropna()
+        self.clean_logs = pd.read_csv(self.path_to_clean_logs,parse_dates=[0,1],date_parser=date_parser).dropna()
+
+
+    def check_exist(self):
+        if not os.path.exists(self.path_to_dirty_logs):
+            ic("dirty logs don't exist!")
+            df_dirty_log = pd.DataFrame({'datetime':[],'activity':[]})
+            df_dirty_log.to_csv(self.path_to_dirty_logs,index=False)
+            ic("saved a blank dirty log file")
+
+        if not os.path.exists(self.path_to_clean_logs):
+            ic("clean logs don't exist!")
+            df_clean_log = pd.DataFrame({'activity':[],'BeginDatetime':[],'EndDatetime':[]})
+            df_clean_log.to_csv(self.path_to_clean_logs,index=False)
+            ic("saved a blank clean log file")
+        self.refresh_logs()
+        if len(self.dirty_logs) == 0:
+            ic("currently no logs, some features may not work")
+        return 0
+
+
+    def print_logs(self):
+        print(self.dirty_logs)
+        print(self.clean_logs)
+
+    def add_log_to_file(self,activity):
+        new_row = pd.DataFrame({
+
+                'datetime':[datetime.now()],
+                'activity':[activity]
+
+                })
+        dirty_logs = pd.concat([self.dirty_logs,new_row])
+        dirty_logs.to_csv(self.path_to_dirty_logs,index=False)
+        self.refresh_logs()
+        return 0
+
+    def set_inactive(self):
+        last_activity = self.dirty_logs.tail(1)['activity'].values[0]
+        if last_activity == "inactive":
+            return
+        else:
+            self.add_log_to_file("inactive")
+
+    def find_consecutive_values(self,df):
+        cleaner = clean.clean_df(df,self.def_time)
+        consec_frame = cleaner.clean_dataframe()
+        ic(f"when cleaning dirty logs produced {consec_frame}")
+
+        return consec_frame
+
+
+    def dirty_to_clean(self):
+        """ unoptimised """
+        ic("CLEANING DIRTY LOGS INTO CLEAN")
+        cleaned_dataframe = self.find_consecutive_values(self.dirty_logs)
+        cleaned_dataframe.to_csv(self.path_to_clean_logs,index=False)
+        self.refresh_logs
+        return 0
+
+    def make_activity_dict(self,df_):
+        estimator = estimate_class.lower_bound_confidence_estimate(df_)
+        activity_time_est = estimator.main()
+        ic(activity_time_est)
+        return activity_time_est
+
+
+
+
+    def check_if_something_is_happening(self):
+        if len(self.dirty_logs) == 0:
+            return False
+
+
+        last_activity = self.dirty_logs.tail(1)['activity'].values[0]
+        last_time_recorded = pd.to_datetime(self.dirty_logs.tail(1)['datetime']).values[0].astype('M8[ms]').astype('O')
+
+        self.refresh_logs()
+        activity_dict = self.make_activity_dict(self.clean_logs)
+
+        ic(last_activity,activity_dict)
+        if last_activity in activity_dict:
+            ic("activity has been found previously")
+            end_of_task_est = timedelta(seconds = activity_dict[last_activity])+last_time_recorded
+            if not datetime.now()>=end_of_task_est:
+                ic(f"current activity has an estimate of {activity_dict[last_activity]} seconds")
+                ic(f"currently there is an activity going on that will end at {end_of_task_est}")
+                return True
+            else:
+                ic("currently there is no activity going on")
+                return False
+
+
+        else:
+            ic("this activity is new")
+            end_of_task_est = timedelta(seconds = self.def_time)+last_time_recorded
+            if not datetime.now()>=end_of_task_est:
+                ic(f"currently there is an activity going on that will end at {end_of_task_est}")
+                return True
+            else:
+                ic("currently there is no activity going on")
+                return False
+
+
+
+
+
+
+
+
+
+logs = log_files()
+logs.check_exist()
+logs.print_logs()
