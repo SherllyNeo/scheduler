@@ -16,7 +16,7 @@ class clean_df:
           if df_.at[i,'EndDatetime'] != df_.at[i+1,'BeginDatetime']:
             df_.at[i,'EndDatetime'] = df_.at[i+1,'BeginDatetime']
         except:
-          df_.at[i,'EndDatetime'] = df_.at[i,'BeginDatetime'] + timedelta(seconds=self.mod_time)
+          df_.at[i,'EndDatetime'] = df_.at[i,'EndDatetime'] + timedelta(seconds=self.mod_time)
     return df_
 
 
