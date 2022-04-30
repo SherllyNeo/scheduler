@@ -16,7 +16,7 @@ class clean_df:
           if df_.at[i,'EndDatetime'] != df_.at[i+1,'BeginDatetime']:
             df_.at[i,'EndDatetime'] = df_.at[i+1,'BeginDatetime']
         except:
-          df_.at[i,'EndDatetime'] = df_.at[i,'EndDatetime'] + timedelta(seconds=self.mod_time)
+          df_.at[i,'EndDatetime'] = df_.at[i,'BeginDatetime'] + timedelta(seconds=self.mod_time)
     return df_
 
 
@@ -24,7 +24,8 @@ class clean_df:
     """ a beautiful cleaning function that will merge consecutive activities to reduce redundancy """
     df = self.df
     df['datetime'] = pd.to_datetime(df['datetime'])
-    group_term = ([(df.activity != df.activity.shift()).cumsum()])
+    group_term = [(df.activity != df.activity.shift()).cumsum()]
+
     consec = pd.DataFrame({'BeginDatetime' : df.groupby(group_term).datetime.first(),
                   'EndDatetime' : df.groupby(group_term).datetime.last(),
                   'activity' : df.groupby(group_term).activity.first()}).reset_index(drop=True)
