@@ -53,7 +53,7 @@ class log_files:
 
         if not os.path.isfile(path_to_valid_times):
 
-            valid_times = dict(monday=1,tuesday=1,wednesday=1,thursday=1,friday=1,saturday=1,sunday=1,start_time="1",end_time="24")
+            valid_times = dict(monday=1,tuesday=1,wednesday=1,thursday=1,friday=1,saturday=1,sunday=1,start_time="0",end_time="24")
 
 
             with open(path_to_valid_times,"w+") as writer:
