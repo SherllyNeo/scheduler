@@ -27,8 +27,11 @@ class log_files:
     def refresh_logs(self):
         """ refreshes the log dataframes so that estimates are accurate """
         date_parser = lambda date: pd.to_datetime(date)
-        self.dirty_logs = pd.read_csv(self.path_to_dirty_logs,parse_dates=[0],date_parser=date_parser).dropna()
-        self.clean_logs = pd.read_csv(self.path_to_clean_logs,parse_dates=[0,1],date_parser=date_parser).dropna()
+        self.dirty_logs = pd.read_csv(self.path_to_dirty_logs).dropna()
+        self.clean_logs = pd.read_csv(self.path_to_clean_logs).dropna()
+        self.dirty_logs['datetime'] = pd.to_datetime(self.dirty_logs['datetime'])
+        self.clean_logs['BeginDatetime'] = pd.to_datetime( self.clean_logs['BeginDatetime'] )
+        self.clean_logs['EndDatetime'] = pd.to_datetime( self.clean_logs['EndDatetime'] )
 
 
     def check_exist(self):
