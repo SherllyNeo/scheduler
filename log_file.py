@@ -6,6 +6,7 @@ import math
 import numpy as np
 import clean
 import estimate_class
+from pathlib import Path
 
 #debug mode is ic.enable() which will print out all the ic statements
 ic.enable()
@@ -32,21 +33,47 @@ class log_files:
 
     def check_exist(self):
         """ Checks that the log_files and exists and makes them if they do not """
-        if not os.path.exists(self.path_to_dirty_logs):
+
+        path_to_valid_times = "./log_files/valid_times/valid_times.json"
+
+        if not os.path.exists("./log_files"):
+            os.makedirs("./log_files")
+
+        if not os.path.exists("./log_files/log_files"):
+            os.makedirs("./log_files/log_files")
+
+        if not os.path.exists("./log_files/log_files_cleaned"):
+            os.makedirs("./log_files/log_files_cleaned")
+
+        if not os.path.exists("./log_files/valid_times"):
+            os.makedirs("./log_files/valid_times")
+
+        if not os.path.isfile(path_to_valid_times):
+
+            valid_times = dict(monday=1,tuesday=1,wednesday=1,thursday=1,friday=1,saturday=1,sunday=1,start_time="1",end_time="24")
+
+
+            with open(path_to_valid_times,"w+") as writer:
+                writer.write(str(valid_times))
+                ic("added default valid times to logs")
+
+
+
+        if not os.path.isfile(self.path_to_dirty_logs):
             ic("dirty logs don't exist!")
             df_dirty_log = pd.DataFrame({'datetime':[],'activity':[]})
             df_dirty_log.to_csv(self.path_to_dirty_logs,index=False)
             ic("saved a blank dirty log file")
 
-        if not os.path.exists(self.path_to_clean_logs):
+        if not os.path.isfile(self.path_to_clean_logs):
             ic("clean logs don't exist!")
             df_clean_log = pd.DataFrame({'activity':[],'BeginDatetime':[],'EndDatetime':[]})
             df_clean_log.to_csv(self.path_to_clean_logs,index=False)
             ic("saved a blank clean log file")
+
         self.refresh_logs()
         if len(self.dirty_logs) == 0:
             ic("currently no logs, some features may not work")
-        return 0
 
 
     def print_logs(self):

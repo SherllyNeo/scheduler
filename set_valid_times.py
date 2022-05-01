@@ -9,7 +9,6 @@ def set_valid_timer():
     with open(path+"/valid_times.json","w") as writer:
         writer.write(str(valid_times))
         print("written valid time to logs")
-    return 0
 
 
 set_valid_timer()
