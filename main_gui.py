@@ -246,7 +246,7 @@ class History(tk.Frame):
 
         tk.Frame.__init__(self, parent)
         label = ttk.Label(self, text ="History", font = LARGEFONT)
-        label.grid(row = 0, column = 4, padx = 10, pady = 10)
+        label.grid(row = 0, column = 2, padx = 10, pady = 10)
 
         # button to show frame 2 with text
         # layout2
@@ -255,20 +255,20 @@ class History(tk.Frame):
 
         # putting the button in its place by
         # using grid
-        button1.grid(row = 2, column = 1, padx = 10, pady = 10)
+        button1.grid(row = 3, column = 2, padx = 10, pady = 10)
         def update():
             f = Frame(self)
             f.grid(row=2,column=2,padx=10,pady=10)
             df = pd.read_csv("./log_files/log_files_cleaned/clean_logs.csv")
             pt = Table(f, dataframe=df,
-                                    showtoolbar=True, showstatusbar=True)
+                                    showtoolbar=False, showstatusbar=True)
             pt.show()
             #set some options
             options = {'colheadercolor':'green','floatprecision': 5}
             config.apply_options(options, pt)
             pt.show()
             self.after(10000,update)
-        self.after(10000,update)
+        self.after(1,update)
 
 
 # Driver Code
