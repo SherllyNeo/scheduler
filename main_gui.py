@@ -101,14 +101,12 @@ class StartPage(tk.Frame):
 
         start_button = ttk.Button(self, text = "Start Scheduler", command = start_main)
 
-        end_button = ttk.Button(self, text = "Stop Scheduler", command = stop_main)
 
         edit_history_button = ttk.Button(self, text = "Edit History", command = lambda: controller.show_frame(History))
 
         quit_button = ttk.Button(self,text="Exit",command=destory_window)
 
         start_button.grid(row = 1, column = 1, padx = 10, pady = 10)
-        end_button.grid(row = 1, column = 3, padx = 10, pady = 10)
 
         settings_button.grid(row = 2, column = 1, padx = 10, pady = 10)
 
