@@ -7,6 +7,7 @@ import numpy as np
 import clean
 import estimate_class
 from pathlib import Path
+import ast
 
 #debug mode is ic.enable() which will print out all the ic statements
 ic.enable()
@@ -156,7 +157,21 @@ class log_files:
 
         last_activity = self.dirty_logs.tail(1)['activity'].values[0]
         last_time_recorded = pd.to_datetime(self.dirty_logs.tail(1)['datetime']).values[0].astype('M8[ms]').astype('O')
-
+        if os.path.isfile(r"user_activity.json"):
+            with open(r"user_activity.json","r+") as r:
+                user_dict = ast.literal_eval(r.read())
+                ic(user_dict)
+                ic(last_activity)
+                ic(last_time_recorded)
+                end_of_task_est = timedelta(seconds = float(user_dict[last_activity]))+last_time_recorded
+            if not datetime.now()>=end_of_task_est:
+                ic(f"current activity has an estimate of {user_dict[last_activity]} seconds")
+                ic(f"currently there is an activity going on that will end at {end_of_task_est}")
+                os.remove(r"user_activity.json")
+                return True
+            else:
+                ic("currently there is no activity going on")
+                return False
         self.refresh_logs()
         activity_dict = self.make_activity_dict(self.clean_logs)
 

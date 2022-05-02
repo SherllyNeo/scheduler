@@ -29,11 +29,17 @@ def start_thread():
     if log_control.check_if_something_is_happening():
         return
     else:
-        current_activity = gui.call_gui()
+        current_activity,user_estimate = gui.call_gui()
+        
         ic(current_activity)
         log_control.add_log_to_file(current_activity)
         log_control.refresh_logs()
         log_control.dirty_to_clean()
+        if user_estimate:
+            with open(r"user_activity.json","w+") as w:
+                user_est = {current_activity:user_estimate}
+                w.write(str(user_est))
+        
 
 def main_function():
     while True:

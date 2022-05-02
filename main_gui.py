@@ -143,8 +143,6 @@ class Settings(tk.Frame):
             with open(r"./main_ok.json","w+") as writer:
                 main_ok_defaults = {"main_ok":0}
                 writer.write(str(main_ok_defaults))
-            log_files().set_inactive()
-            log_files().dirty_to_clean()
 
         def start_main():
             _thread.start_new_thread(main_function,())
