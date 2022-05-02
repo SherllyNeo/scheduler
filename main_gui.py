@@ -34,7 +34,7 @@ if not os.path.isfile("./main_ok.json"):
 
 
 LARGEFONT =("Verdana", 35)
-
+BOLDERFONT = ("verdana",16)
 class tkinterApp(tk.Tk):
 
     # __init__ function for class tkinterApp
@@ -68,28 +68,23 @@ class tkinterApp(tk.Tk):
 
         self.show_frame(StartPage)
 
-    # to display the current frame passed as
-    # parameter
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
 
-# first window frame startpage
 
 class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
+        start_page_log_controller = log_files()
         global main_label
         tk.Frame.__init__(self, parent)
 
-        # label of frame Layout 2
         label = ttk.Label(self, text ="Scheduler by Sherlly", font = LARGEFONT)
 
-        # putting the grid in its place by using
-        # grid
         def stop_main():
             global main_label
-            main_label.config(text="ending scheduler and cleaning up")
+            main_label.config(text="ending scheduler and cleaning up",font=BOLDERFONT)
             with open("./main_ok.json","w+") as writer:
                 main_ok_defaults = {"main_ok":0}
                 writer.write(str(main_ok_defaults))
@@ -98,7 +93,7 @@ class StartPage(tk.Frame):
 
         def start_main():
             global main_label
-            main_label.config(text="started scheduler")
+            main_label.config(text="started scheduler",font=BOLDERFONT)
             _thread.start_new_thread(main_function,())
         def restart_main():
              stop_main()
@@ -108,6 +103,7 @@ class StartPage(tk.Frame):
             app.destroy()
 
         main_label = ttk.Label(self,text="Press start scheduler")
+        main_label.config(font=BOLDERFONT)
         main_label.grid(row=1,column=2)
         label.grid(row = 0, column = 2, padx = 10, pady = 10)
 
@@ -130,9 +126,15 @@ class StartPage(tk.Frame):
 
         quit_button.grid(row = 3, column = 2, padx = 10, pady = 10)
 
+        last_activity_label = Label(self,text="blank",font=BOLDERFONT)
+        last_activity_label.grid(row = 2, column = 2, padx = 10, pady = 10)
+        def update():
+            last_activity = start_page_log_controller.get_last_activity()
+            last_activity_label.config(text=f"last activity was: {last_activity}",font=BOLDERFONT)
+            self.after(1000, update)
+        self.after(1000,update)
 
 
-# second window frame page1
 class Settings(tk.Frame):
 
     def __init__(self, parent, controller):

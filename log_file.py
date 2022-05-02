@@ -134,8 +134,14 @@ class log_files:
         ic(activity_time_est)
         return activity_time_est
 
-
-
+    def get_last_activity(self) -> str:
+        self.check_exist()
+        last_activity = str()
+        try:
+            last_activity = self.dirty_logs.tail(1)['activity'].values[0]
+        except:
+            last_activity  = "nothing"
+        return last_activity
 
     def check_if_something_is_happening(self) -> bool:
         """ checks if an activity is currently happening by looking at the last activity and adding on a time estimate if it exists or an arbitary amount of time if it does not """
