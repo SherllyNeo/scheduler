@@ -21,8 +21,11 @@ class lower_bound_confidence_estimate:
     """ for every activity we estimate how long it will take based on past records using the lower bound of the 95% confidence interval and then construct a dictionary for each activity and it's estimate """
     estimation_dict = dict()
     for activity in self.df.activity.unique():
-      deltas_for_activity = self.filter_deltas(activity)
-      estimation_dict[activity] = deltas_for_activity.mean() - (deltas_for_activity.std(ddof=0)/math.sqrt(len(deltas_for_activity)))
+        deltas_for_activity = self.filter_deltas(activity)
+        est = deltas_for_activity.mean() - (deltas_for_activity.std(ddof=0)/math.sqrt(len(deltas_for_activity)))
+        if (est<15) | len(deltas_for_activity)<5:
+            est = 15
+        estimation_dict[activity] = est
     return estimation_dict
 
 

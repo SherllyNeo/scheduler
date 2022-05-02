@@ -40,7 +40,6 @@ def main_function():
         if user_wants_to_stop():
             sys.exit("quitting")
         GLOBAL_LOGS.check_exist()
-        time.sleep(2)
         ic("checking")
 
         if valid_time():

@@ -131,6 +131,7 @@ class log_files:
         """ turns the clean logs file into a dictionary of activities and their estimate length """
         estimator = estimate_class.lower_bound_confidence_estimate(df_)
         activity_time_est = estimator.main()
+        activity_time_est['inactive'] = 15
         ic(activity_time_est)
         return activity_time_est
 

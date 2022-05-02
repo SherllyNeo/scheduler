@@ -3,13 +3,14 @@ import time
 from main import main_function
 from icecream import ic
 import _thread
-from edit_history import editor
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 import pandas as pd
 from log_file import log_files
 from set_valid_times import time_setter
+from pandastable import Table, TableModel, config
+log_files().check_exist()
 def make_default_json():
     main_ok_defaults = dict(main_ok=1)
     with open("./main_ok.json","w+") as writer:
@@ -21,17 +22,6 @@ def make_default_json():
 if not os.path.isfile("./main_ok.json"):
     ic("not found main_ok so making")
     make_default_json()
-
-
-
-
-
-
-
-
-
-
-
 
 LARGEFONT =("Verdana", 35)
 BOLDERFONT = ("verdana",16)
@@ -252,6 +242,8 @@ class Settings(tk.Frame):
 # third window frame page2
 class History(tk.Frame):
     def __init__(self, parent, controller):
+        log_files().check_exist()
+
         tk.Frame.__init__(self, parent)
         label = ttk.Label(self, text ="History", font = LARGEFONT)
         label.grid(row = 0, column = 4, padx = 10, pady = 10)
@@ -264,6 +256,19 @@ class History(tk.Frame):
         # putting the button in its place by
         # using grid
         button1.grid(row = 2, column = 1, padx = 10, pady = 10)
+        def update():
+            f = Frame(self)
+            f.grid(row=2,column=2,padx=10,pady=10)
+            df = pd.read_csv("./log_files/log_files_cleaned/clean_logs.csv")
+            pt = Table(f, dataframe=df,
+                                    showtoolbar=True, showstatusbar=True)
+            pt.show()
+            #set some options
+            options = {'colheadercolor':'green','floatprecision': 5}
+            config.apply_options(options, pt)
+            pt.show()
+            self.after(10000,update)
+        self.after(10000,update)
 
 
 # Driver Code
