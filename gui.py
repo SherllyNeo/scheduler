@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import *
 
+
 ic.enable()
 
 def call_gui():
@@ -33,7 +34,7 @@ def call_gui():
     def get_user_est():
         global est_e 
         global user_estimate
-        user_estimate = float(est_e.get())
+        user_estimate = est_e.get()
 
 
     # Create label
@@ -56,8 +57,9 @@ def call_gui():
     exit_button.grid(row=3,column=2,padx=10,pady=10)
     est_e = Entry(side_root)
     est_e.grid(row=2,column=1,padx=10,pady=10)
-    est_e.insert(0, 'optional_time_est_in_minutes')
     side_root.mainloop()
 
     ic(user_input,user_estimate)
+    if user_estimate == '':
+        user_estimate = False
     return user_input,user_estimate

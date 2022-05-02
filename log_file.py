@@ -167,7 +167,6 @@ class log_files:
             if not datetime.now()>=end_of_task_est:
                 ic(f"current activity has an estimate of {user_dict[last_activity]} seconds")
                 ic(f"currently there is an activity going on that will end at {end_of_task_est}")
-                os.remove(r"user_activity.json")
                 return True
             else:
                 ic("currently there is no activity going on")

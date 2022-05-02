@@ -5,6 +5,7 @@ from icecream import ic
 import gui
 import sys
 import ast
+import os
 
 ic.enable()
 
@@ -30,7 +31,8 @@ def start_thread():
         return
     else:
         current_activity,user_estimate = gui.call_gui()
-        
+        if os.path.isfile(r"user_activity.json"):
+            os.remove(r"user_activity.sjon")
         ic(current_activity)
         log_control.add_log_to_file(current_activity)
         log_control.refresh_logs()
