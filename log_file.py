@@ -17,8 +17,8 @@ class log_files:
 
     def __init__(self):
         """ init with useful paths and variables that are needed in the class scope """
-        self.path_to_dirty_logs =  "log_files/log_files/logs.csv"
-        self.path_to_clean_logs =  "log_files/log_files_cleaned/clean_logs.csv"
+        self.path_to_dirty_logs =  r"log_files/log_files/logs.csv"
+        self.path_to_clean_logs =  r"log_files/log_files_cleaned/clean_logs.csv"
         self.dirty_logs = pd.DataFrame({'activity':[],'datetime':[]})
         self.clean_logs = pd.DataFrame({'activity':[],'BeginDatetime':[],'EndDatetime':[]})
         self.est = dict()
@@ -37,19 +37,19 @@ class log_files:
     def check_exist(self):
         """ Checks that the log_files and exists and makes them if they do not """
 
-        path_to_valid_times = "./log_files/valid_times/valid_times.json"
+        path_to_valid_times = r"./log_files/valid_times/valid_times.json"
 
-        if not os.path.exists("./log_files"):
-            os.makedirs("./log_files")
+        if not os.path.exists(r"./log_files"):
+            os.makedirs(r"./log_files")
 
-        if not os.path.exists("./log_files/log_files"):
-            os.makedirs("./log_files/log_files")
+        if not os.path.exists(r"./log_files/log_files"):
+            os.makedirs(r"./log_files/log_files")
 
-        if not os.path.exists("./log_files/log_files_cleaned"):
-            os.makedirs("./log_files/log_files_cleaned")
+        if not os.path.exists(r"./log_files/log_files_cleaned"):
+            os.makedirs(r"./log_files/log_files_cleaned")
 
-        if not os.path.exists("./log_files/valid_times"):
-            os.makedirs("./log_files/valid_times")
+        if not os.path.exists(r"./log_files/valid_times"):
+            os.makedirs(r"./log_files/valid_times")
 
         if not os.path.isfile(path_to_valid_times):
 
@@ -92,6 +92,7 @@ class log_files:
                 'activity':[activity]
 
                 })
+        ic(f"concating {new_row}")
         dirty_logs = pd.concat([self.dirty_logs,new_row])
         dirty_logs.to_csv(self.path_to_dirty_logs,index=False)
         self.refresh_logs()
@@ -132,7 +133,10 @@ class log_files:
         estimator = estimate_class.lower_bound_confidence_estimate(df_)
         activity_time_est = estimator.main()
         activity_time_est['inactive'] = 15
+        activity_time_est['nothing'] = 15
         ic(activity_time_est)
+        with open(r"activity.json","w+") as w:
+            w.write(str(activity_time_est))
         return activity_time_est
 
     def get_last_activity(self) -> str:
