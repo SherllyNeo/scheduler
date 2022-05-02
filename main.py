@@ -12,11 +12,11 @@ GLOBAL_LOGS = log_files()
 
 def user_wants_to_stop():
     main_ok_dict = {"main_ok":1}
-    with open("./main_ok.json","r+") as reader:
+    with open(r"./main_ok.json","r+") as reader:
         okay_or_no = ast.literal_eval(reader.read())
 
     if okay_or_no['main_ok'] == 0:
-        with open("./main_ok.json","w") as writer:
+        with open(r"./main_ok.json","w") as writer:
             writer.write(str(main_ok_dict))
         return True
     else:

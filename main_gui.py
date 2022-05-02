@@ -13,13 +13,13 @@ from pandastable import Table, TableModel, config
 log_files().check_exist()
 def make_default_json():
     main_ok_defaults = dict(main_ok=1)
-    with open("./main_ok.json","w+") as writer:
+    with open(r"./main_ok.json","w+") as writer:
         writer.write(str(main_ok_defaults))
         print("written default values to main_ok.json",str(main_ok_defaults))
 
 
 
-if not os.path.isfile("./main_ok.json"):
+if not os.path.isfile(r"./main_ok.json"):
     ic("not found main_ok so making")
     make_default_json()
 
@@ -75,7 +75,7 @@ class StartPage(tk.Frame):
         def stop_main():
             global main_label
             main_label.config(text="ending scheduler and cleaning up",font=BOLDERFONT)
-            with open("./main_ok.json","w+") as writer:
+            with open(r"./main_ok.json","w+") as writer:
                 main_ok_defaults = {"main_ok":0}
                 writer.write(str(main_ok_defaults))
             log_files().set_inactive()
@@ -142,7 +142,7 @@ class Settings(tk.Frame):
         label = ttk.Label(self, text ="Settings", font = LARGEFONT)
         label.grid(row = 0, column = 3, padx = 10, pady = 10)
         def stop_main():
-            with open("./main_ok.json","w+") as writer:
+            with open(r"./main_ok.json","w+") as writer:
                 main_ok_defaults = {"main_ok":0}
                 writer.write(str(main_ok_defaults))
             log_files().set_inactive()
@@ -259,7 +259,7 @@ class History(tk.Frame):
         def update():
             f = Frame(self)
             f.grid(row=2,column=2,padx=10,pady=10)
-            df = pd.read_csv("./log_files/log_files_cleaned/clean_logs.csv")
+            df = pd.read_csv(r"./log_files/log_files_cleaned/clean_logs.csv")
             pt = Table(f, dataframe=df,
                                     showtoolbar=False, showstatusbar=True)
             pt.show()

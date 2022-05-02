@@ -1,6 +1,6 @@
 from datetime import datetime,date,timedelta
 import ast
-PATH_TO_TIMES = './log_files/valid_times/valid_times.json'
+PATH_TO_TIMES = r'./log_files/valid_times/valid_times.json'
 
 def mapper(day_of_week):
     """ a small function to map the day of the week to it's number """
