@@ -3,7 +3,6 @@ import time
 from main import main_function
 from icecream import ic
 import _thread
-from settings import settings_gui
 from edit_history import editor
 import tkinter as tk
 from tkinter import *
@@ -80,6 +79,7 @@ class tkinterApp(tk.Tk):
 class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
+        global main_label
         tk.Frame.__init__(self, parent)
 
         # label of frame Layout 2
@@ -88,6 +88,8 @@ class StartPage(tk.Frame):
         # putting the grid in its place by using
         # grid
         def stop_main():
+            global main_label
+            main_label.config(text="ending scheduler and cleaning up")
             with open("./main_ok.json","w+") as writer:
                 main_ok_defaults = {"main_ok":0}
                 writer.write(str(main_ok_defaults))
@@ -95,6 +97,8 @@ class StartPage(tk.Frame):
             log_files().dirty_to_clean()
 
         def start_main():
+            global main_label
+            main_label.config(text="started scheduler")
             _thread.start_new_thread(main_function,())
         def restart_main():
              stop_main()
@@ -103,6 +107,8 @@ class StartPage(tk.Frame):
             global app
             app.destroy()
 
+        main_label = ttk.Label(self,text="Press start scheduler")
+        main_label.grid(row=1,column=2)
         label.grid(row = 0, column = 2, padx = 10, pady = 10)
 
         settings_button = Button(self, text = "Settings", command = lambda: controller.show_frame(Settings))
@@ -124,17 +130,97 @@ class StartPage(tk.Frame):
 
         quit_button.grid(row = 3, column = 2, padx = 10, pady = 10)
 
+
+
 # second window frame page1
 class Settings(tk.Frame):
 
     def __init__(self, parent, controller):
 
+        global input_end
+        global input_start
+        global monday_val
+        global tuesday_val
+        global wednesday_val
+        global thursday_val
+        global friday_val
+        global saturday_val
+        global sunday_val
         tk.Frame.__init__(self, parent)
         label = ttk.Label(self, text ="Settings", font = LARGEFONT)
-        label.grid(row = 0, column = 4, padx = 10, pady = 10)
+        label.grid(row = 0, column = 3, padx = 10, pady = 10)
+        def stop_main():
+            with open("./main_ok.json","w+") as writer:
+                main_ok_defaults = {"main_ok":0}
+                writer.write(str(main_ok_defaults))
+            log_files().set_inactive()
+            log_files().dirty_to_clean()
+
+        def start_main():
+            _thread.start_new_thread(main_function,())
+        def restart_main():
+             stop_main()
+             start_main()
+
+
+        monday_val = tk.IntVar(value=1)
+        monday_button = tk.Checkbutton(self, text='monday',variable=monday_val, onvalue=1, offvalue=0)
+        monday_button.grid(row = 1, column = 1, padx = 10, pady=10)
+
+        tuesday_val = tk.IntVar(value=1)
+        tuesday_button = tk.Checkbutton(self, text='tuesday',variable=tuesday_val, onvalue=1, offvalue=0)
+        tuesday_button.grid(row = 1, column = 2, padx = 10, pady=10)
+
+
+        wednesday_val = tk.IntVar(value=1)
+        wednesday_button = tk.Checkbutton(self, text='wednesday',variable=wednesday_val, onvalue=1, offvalue=0)
+        wednesday_button.grid(row = 1, column = 3, padx = 10, pady=10)
+
+
+        thursday_val = tk.IntVar(value=1)
+        thursday_button = tk.Checkbutton(self, text='thursday',variable=thursday_val, onvalue=1, offvalue=0)
+        thursday_button.grid(row = 1, column = 4, padx = 10, pady=10)
+
+
+        friday_val = tk.IntVar(value=1)
+        friday_button = tk.Checkbutton(self, text='friday',variable=friday_val, onvalue=1, offvalue=0)
+        friday_button.grid(row = 1, column = 5, padx = 10, pady=10)
+
+
+        saturday_val = tk.IntVar()
+        saturday_button = tk.Checkbutton(self, text='saturday',variable=saturday_val, onvalue=1, offvalue=0)
+        saturday_button.grid(row = 1, column = 6, padx = 10, pady=10)
+
+
+        sunday_val = tk.IntVar()
+        sunday_button = tk.Checkbutton(self, text='sunday',variable=sunday_val, onvalue=1, offvalue=0)
+        sunday_button.grid(row = 1, column = 7, padx = 10, pady=10)
+
+        input_label = ttk.Label(self,text="start hour: eg 7")
+        input_label.grid(row = 2, column = 2, padx = 10, pady = 10)
+        input_start = ttk.Entry(self)
+        input_start.insert(0,"0")
+        input_start.grid(row = 2, column = 3, padx = 10, pady = 10)
+        input_start.focus_set()
+
+        input_end_label = ttk.Label(self,text="end hour: eg 17")
+        input_end_label.grid(row = 3, column = 2, padx = 10, pady = 10)
+        input_end = ttk.Entry(self)
+        input_end.insert(0,"24")
+        input_end.grid(row = 3, column = 3, padx = 10, pady = 10)
+        input_end.focus_set()
+
         def use_selection():
             global input_end
             global input_start
+            global monday_val
+            global tuesday_val
+            global wednesday_val
+            global thursday_val
+            global friday_val
+            global saturday_val
+            global sunday_val
+
             start_time_val = input_start.get()
             end_time_val = input_end.get()
 
@@ -149,59 +235,15 @@ class Settings(tk.Frame):
             start_time_val,
             end_time_val)
 
-
-        monday_val = tk.IntVar()
-        monday_button = tk.Checkbutton(self, text='monday',variable=monday_val, onvalue=1, offvalue=0, command=use_selection)
-        monday_button.grid(row = 1, column = 1, padx = 10, pady=10)
-
-        tuesday_val = tk.IntVar()
-        tuesday_button = tk.Checkbutton(self, text='tuesday',variable=tuesday_val, onvalue=1, offvalue=0, command=use_selection)
-        tuesday_button.grid(row = 1, column = 2, padx = 10, pady=10)
-
-
-        wednesday_val = tk.IntVar()
-        wednesday_button = tk.Checkbutton(self, text='wednesday',variable=wednesday_val, onvalue=1, offvalue=0, command=use_selection)
-        wednesday_button.grid(row = 1, column = 3, padx = 10, pady=10)
-
-
-        thursday_val = tk.IntVar()
-        thursday_button = tk.Checkbutton(self, text='thursday',variable=thursday_val, onvalue=1, offvalue=0, command=use_selection)
-        thursday_button.grid(row = 1, column = 4, padx = 10, pady=10)
-
-
-        friday_val = tk.IntVar()
-        friday_button = tk.Checkbutton(self, text='friday',variable=friday_val, onvalue=1, offvalue=0, command=use_selection)
-        friday_button.grid(row = 1, column = 5, padx = 10, pady=10)
-
-
-        saturday_val = tk.IntVar()
-        saturday_button = tk.Checkbutton(self, text='saturday',variable=saturday_val, onvalue=1, offvalue=0, command=use_selection)
-        saturday_button.grid(row = 1, column = 6, padx = 10, pady=10)
-
-
-        sunday_val = tk.IntVar()
-        sunday_button = tk.Checkbutton(self, text='sunday',variable=sunday_val, onvalue=1, offvalue=0, command=use_selection)
-        sunday_button.grid(row = 1, column = 7, padx = 10, pady=10)
-
-        input_label = ttk.Button(self,text="start hour: eg 7",command=use_selection)
-        input_label.grid(row = 2, column = 2, padx = 10, pady = 10)
-        input_start = ttk.Entry(self)
-        input_start.grid(row = 2, column = 3, padx = 10, pady = 10)
-        input_start.focus_set()
-
-        input_end_label = ttk.Button(self,text="end hour: eg 17",command=use_selection)
-        input_end_label.grid(row = 3, column = 2, padx = 10, pady = 10)
-        input_end = ttk.Entry(self)
-        input_end.grid(row = 3, column = 3, padx = 10, pady = 10)
-        input_end.focus_set()
-
-        button1 = ttk.Button(self, text ="Back to main menu",
+        quit_button = ttk.Button(self, text ="Back to main menu (quit)",
                             command = lambda : controller.show_frame(StartPage))
 
-        # putting the button in its place
-        # by using grid
-        button1.grid(row = 4, column = 1, padx = 10, pady = 10)
+        quit_button.grid(row = 4, column = 2, padx = 10, pady = 10)
 
+        quit_button = ttk.Button(self, text ="Back to main menu (save and exit)",
+                            command = lambda : [use_selection(),restart_main(),controller.show_frame(StartPage)])
+
+        quit_button.grid(row = 4, column = 3, padx = 10, pady = 10)
 
 
 
