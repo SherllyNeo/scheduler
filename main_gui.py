@@ -10,6 +10,7 @@ from tkinter import *
 from tkinter import ttk
 import pandas as pd
 from log_file import log_files
+from set_valid_times import time_setter
 def make_default_json():
     main_ok_defaults = dict(main_ok=1)
     with open("./main_ok.json","w+") as writer:
@@ -131,15 +132,75 @@ class Settings(tk.Frame):
         tk.Frame.__init__(self, parent)
         label = ttk.Label(self, text ="Settings", font = LARGEFONT)
         label.grid(row = 0, column = 4, padx = 10, pady = 10)
+        def use_selection():
+            global input_end
+            global input_start
+            start_time_val = input_start.get()
+            end_time_val = input_end.get()
 
-        # button to show frame 2 with text
-        # layout2
+            time_setter(
+            monday_val.get(),
+            tuesday_val.get(),
+            wednesday_val.get(),
+            thursday_val.get(),
+            friday_val.get(),
+            saturday_val.get(),
+            sunday_val.get(),
+            start_time_val,
+            end_time_val)
+
+
+        monday_val = tk.IntVar()
+        monday_button = tk.Checkbutton(self, text='monday',variable=monday_val, onvalue=1, offvalue=0, command=use_selection)
+        monday_button.grid(row = 1, column = 1, padx = 10, pady=10)
+
+        tuesday_val = tk.IntVar()
+        tuesday_button = tk.Checkbutton(self, text='tuesday',variable=tuesday_val, onvalue=1, offvalue=0, command=use_selection)
+        tuesday_button.grid(row = 1, column = 2, padx = 10, pady=10)
+
+
+        wednesday_val = tk.IntVar()
+        wednesday_button = tk.Checkbutton(self, text='wednesday',variable=wednesday_val, onvalue=1, offvalue=0, command=use_selection)
+        wednesday_button.grid(row = 1, column = 3, padx = 10, pady=10)
+
+
+        thursday_val = tk.IntVar()
+        thursday_button = tk.Checkbutton(self, text='thursday',variable=thursday_val, onvalue=1, offvalue=0, command=use_selection)
+        thursday_button.grid(row = 1, column = 4, padx = 10, pady=10)
+
+
+        friday_val = tk.IntVar()
+        friday_button = tk.Checkbutton(self, text='friday',variable=friday_val, onvalue=1, offvalue=0, command=use_selection)
+        friday_button.grid(row = 1, column = 5, padx = 10, pady=10)
+
+
+        saturday_val = tk.IntVar()
+        saturday_button = tk.Checkbutton(self, text='saturday',variable=saturday_val, onvalue=1, offvalue=0, command=use_selection)
+        saturday_button.grid(row = 1, column = 6, padx = 10, pady=10)
+
+
+        sunday_val = tk.IntVar()
+        sunday_button = tk.Checkbutton(self, text='sunday',variable=sunday_val, onvalue=1, offvalue=0, command=use_selection)
+        sunday_button.grid(row = 1, column = 7, padx = 10, pady=10)
+
+        input_label = ttk.Button(self,text="start hour: eg 7",command=use_selection)
+        input_label.grid(row = 2, column = 2, padx = 10, pady = 10)
+        input_start = ttk.Entry(self)
+        input_start.grid(row = 2, column = 3, padx = 10, pady = 10)
+        input_start.focus_set()
+
+        input_end_label = ttk.Button(self,text="end hour: eg 17",command=use_selection)
+        input_end_label.grid(row = 3, column = 2, padx = 10, pady = 10)
+        input_end = ttk.Entry(self)
+        input_end.grid(row = 3, column = 3, padx = 10, pady = 10)
+        input_end.focus_set()
+
         button1 = ttk.Button(self, text ="Back to main menu",
                             command = lambda : controller.show_frame(StartPage))
 
         # putting the button in its place
         # by using grid
-        button1.grid(row = 1, column = 1, padx = 10, pady = 10)
+        button1.grid(row = 4, column = 1, padx = 10, pady = 10)
 
 
 
